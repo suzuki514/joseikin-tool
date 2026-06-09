@@ -1067,13 +1067,67 @@ function buildMap_5(d) {
 // 様式第13号 (事業所確認票)
 function buildMap_13(d) {
   const m = {};
+  // 労働局名 (B4セル - 「労働局長　殿」の左)
+  if (d.提出先労働局名) m['B4'] = d.提出先労働局名;
+  // 事業主名称＋代表者氏名 (L8 merged)
   if (d.事業主名称) m['L8'] = d.事業主名称 + (d.代表者氏名 ? '　' + d.代表者氏名 : '');
+  // 本社所在地 (L10 merged)
   if (d.本社所在地) m['L10'] = d.本社所在地;
-  if (d.事業所数 !== null && d.事業所数 !== '') m['L12'] = parseFloat(d.事業所数);
-  if (d.事業所名称) m['A16'] = d.事業所名称;
-  const [e1,e2,e3] = splitPhone(d.事業所番号);
-  if (e1) m['D16'] = e1; if (e2) m['I16'] = e2; if (e3) m['P16'] = e3;
-  if (d.労働者数合計 !== null && d.労働者数合計 !== '') m['Q16'] = parseFloat(d.労働者数合計);
+
+  // 事業所確認票タブから取得
+  const jigyoSheet = _sheetData && _sheetData['事業所確認票'];
+
+  // 事業所数 (L12 merged): 事業所確認票!C10 → なければ手動入力フィールド
+  if (jigyoSheet && jigyoSheet['C10'] !== undefined && jigyoSheet['C10'] !== '') {
+    const v = parseFloat(jigyoSheet['C10']);
+    if (!isNaN(v)) m['L12'] = v;
+  } else if (d.事業所数 !== null && d.事業所数 !== '') {
+    m['L12'] = parseFloat(d.事業所数);
+  }
+
+  if (jigyoSheet) {
+    // 申請事業所 = 事業所確認票 row 15 → 様式13号 row 16 (A16/D16/I16/P16/Q16)
+    const name1 = jigyoSheet['B15'];
+    const num1  = jigyoSheet['C15'];
+    const cnt1  = jigyoSheet['E15'];
+    if (name1) m['A16'] = name1;
+    if (num1) {
+      const [e1,e2,e3] = splitPhone(num1);
+      if (e1) m['D16'] = e1; if (e2) m['I16'] = e2; if (e3) m['P16'] = e3;
+    }
+    if (cnt1 !== undefined && cnt1 !== null && cnt1 !== '') {
+      const v = parseFloat(cnt1);
+      if (!isNaN(v)) m['Q16'] = v;
+    }
+
+    // 従たる事業所: 事業所確認票 row 16-25 (事業所2〜11) → 様式13号 row 21,23,25,...,39
+    for (let i = 1; i <= 10; i++) {
+      const srcRow = 15 + i;
+      const dstRow = 21 + (i - 1) * 2;
+      const name = jigyoSheet[`B${srcRow}`];
+      const num  = jigyoSheet[`C${srcRow}`];
+      const cnt  = jigyoSheet[`E${srcRow}`];
+      if (!name) continue;
+      m[`B${dstRow}`] = name;
+      if (num) {
+        const [e1,e2,e3] = splitPhone(num);
+        if (e1) m[`D${dstRow}`] = e1;
+        if (e2) m[`I${dstRow}`] = e2;
+        if (e3) m[`P${dstRow}`] = e3;
+      }
+      if (cnt !== undefined && cnt !== null && cnt !== '') {
+        const v = parseFloat(cnt);
+        if (!isNaN(v)) m[`Q${dstRow}`] = v;
+      }
+    }
+  } else {
+    // 事業所確認票タブがない場合のフォールバック（旧来の動作）
+    if (d.事業所名称) m['A16'] = d.事業所名称;
+    const [e1,e2,e3] = splitPhone(d.事業所番号);
+    if (e1) m['D16'] = e1; if (e2) m['I16'] = e2; if (e3) m['P16'] = e3;
+    if (d.労働者数合計 !== null && d.労働者数合計 !== '') m['Q16'] = parseFloat(d.労働者数合計);
+  }
+
   return m;
 }
 
