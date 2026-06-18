@@ -1080,15 +1080,15 @@ function buildMap_5(d) {
         if (w.name) m[`D${row}`] = w.name;
         if (w.kana) m[`N${row}`] = halfKanaToFullKana(w.kana);
         if (w.insNum) m[`X${row}`] = w.insNum;
-        if (w.appCount !== '' && w.appCount !== undefined && w.appCount !== null) m[`AH${row}`] = w.appCount;
-        if (w.offjtHours !== '' && w.offjtHours !== undefined && w.offjtHours !== null) m[`AN${row}`] = w.offjtHours;
-        if (w.offjtMinutes !== '' && w.offjtMinutes !== undefined && w.offjtMinutes !== null) m[`AU${row}`] = w.offjtMinutes;
+        { const _n = parseFloat(w.appCount); if (!isNaN(_n)) m[`AH${row}`] = _n; }
+        { const _n = parseFloat(w.offjtHours); if (!isNaN(_n)) m[`AN${row}`] = _n; }
+        { const _n = parseFloat(w.offjtMinutes); if (!isNaN(_n)) m[`AU${row}`] = _n; }
         if (w.ojt8) m[`BB${row}`] = w.ojt8;
         if (w.ojtReason) m[`BI${row}`] = w.ojtReason;
-        if (w.ojtHours !== '' && w.ojtHours !== undefined && w.ojtHours !== null) m[`BO${row}`] = w.ojtHours;
-        if (w.ojtMinutes !== '' && w.ojtMinutes !== undefined && w.ojtMinutes !== null) m[`BV${row}`] = w.ojtMinutes;
-        if (w.ojtTotal !== '' && w.ojtTotal !== undefined && w.ojtTotal !== null) m[`CC${row}`] = w.ojtTotal;
-        if (w.ojtTotalMinutes !== '' && w.ojtTotalMinutes !== undefined && w.ojtTotalMinutes !== null) m[`CJ${row}`] = w.ojtTotalMinutes;
+        { const _n = parseFloat(w.ojtHours); if (!isNaN(_n)) m[`BO${row}`] = _n; }
+        { const _n = parseFloat(w.ojtMinutes); if (!isNaN(_n)) m[`BV${row}`] = _n; }
+        { const _n = parseFloat(w.ojtTotal); if (!isNaN(_n)) m[`CC${row}`] = _n; }
+        { const _n = parseFloat(w.ojtTotalMinutes); if (!isNaN(_n)) m[`CJ${row}`] = _n; }
         if (w.seishaTenkan) m[`CQ${row}`] = w.seishaTenkan;
       });
     }
@@ -1109,15 +1109,15 @@ function buildMap_5(d) {
         if (w.gender) m[`F${row}`] = w.gender;
         if (w.birthDate) m[`G${row}`] = w.birthDate;
         if (w.hireDate) m[`H${row}`] = w.hireDate;
-        if (w.appCount !== '' && w.appCount !== undefined && w.appCount !== null) m[`I${row}`] = w.appCount;
-        if (w.offjtHours !== '' && w.offjtHours !== undefined && w.offjtHours !== null) m[`J${row}`] = w.offjtHours;
-        if (w.offjtMinutes !== '' && w.offjtMinutes !== undefined && w.offjtMinutes !== null) m[`L${row}`] = w.offjtMinutes;
+        { const _n = parseFloat(w.appCount); if (!isNaN(_n)) m[`I${row}`] = _n; }
+        { const _n = parseFloat(w.offjtHours); if (!isNaN(_n)) m[`J${row}`] = _n; }
+        { const _n = parseFloat(w.offjtMinutes); if (!isNaN(_n)) m[`L${row}`] = _n; }
         if (w.ojt8) m[`N${row}`] = w.ojt8;
         if (w.ojtReason) m[`O${row}`] = w.ojtReason;
-        if (w.ojtHours !== '' && w.ojtHours !== undefined && w.ojtHours !== null) m[`P${row}`] = w.ojtHours;
-        if (w.ojtMinutes !== '' && w.ojtMinutes !== undefined && w.ojtMinutes !== null) m[`R${row}`] = w.ojtMinutes;
-        if (w.ojtTotal !== '' && w.ojtTotal !== undefined && w.ojtTotal !== null) m[`T${row}`] = w.ojtTotal;
-        if (w.ojtTotalMinutes !== '' && w.ojtTotalMinutes !== undefined && w.ojtTotalMinutes !== null) m[`V${row}`] = w.ojtTotalMinutes;
+        { const _n = parseFloat(w.ojtHours); if (!isNaN(_n)) m[`P${row}`] = _n; }
+        { const _n = parseFloat(w.ojtMinutes); if (!isNaN(_n)) m[`R${row}`] = _n; }
+        { const _n = parseFloat(w.ojtTotal); if (!isNaN(_n)) m[`T${row}`] = _n; }
+        { const _n = parseFloat(w.ojtTotalMinutes); if (!isNaN(_n)) m[`V${row}`] = _n; }
         if (w.seishaTenkan) m[`X${row}`] = w.seishaTenkan;
       });
     }
@@ -1560,12 +1560,26 @@ function fillShikyuYoukenDocx(xml, d) {
     const attrs = /xml:space/.test(p1) ? p1 : (p1 + ' xml:space="preserve"');
     return `<w:t${attrs}>　人材開発支援　</w:t>${mid}助成</w:t>`;
   });
-  // 日付は自動転記しない（最終提出時に手動記入）。労働局名のみ転記。
-  if (d.提出先労働局名) {
-    const labor = `　${escapeXmlText(d.提出先労働局名)}　`;
+  // 日付＋労働局名: ヒアリングシート「支給要件確認申立書」タブから取得
+  // E31=年, G31=月, I31=日 (令和N年M月D日)
+  let dateLabel = '　　年　　月　　日　';
+  if (_sheetData && _sheetData['支給要件確認申立書']) {
+    const shikyuSheet = _sheetData['支給要件確認申立書'];
+    const yr = shikyuSheet['E31'];
+    const mo = shikyuSheet['G31'];
+    const dy = shikyuSheet['I31'];
+    if (yr || mo || dy) {
+      const yrStr = (yr !== undefined && yr !== null && yr !== '') ? String(yr) : '　';
+      const moStr = (mo !== undefined && mo !== null && mo !== '') ? String(mo) : '　';
+      const dyStr = (dy !== undefined && dy !== null && dy !== '') ? String(dy) : '　';
+      dateLabel = `　${yrStr}　年　${moStr}　月　${dyStr}　日　`;
+    }
+  }
+  if (d.提出先労働局名 || dateLabel !== '　　年　　月　　日　') {
+    const labor = d.提出先労働局名 ? `　${escapeXmlText(d.提出先労働局名)}　` : '　　　　　　　　　　';
     xml = xml.replace(
-      /<w:t([^>]*)>([　 ]*[　 ]*年[　 ]*[　 ]*月[　 ]*[　 ]*日[　 ]*)[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*労[　 ]*働[　 ]*局[　 ]*長/,
-      function(m, p1, dateLabel) {
+      /<w:t([^>]*)>[　 ]*[　 ]*年[　 ]*[　 ]*月[　 ]*[　 ]*日[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*[　 ]*労[　 ]*働[　 ]*局[　 ]*長/,
+      function(m, p1) {
         return `<w:t${p1}>${dateLabel}${labor}労　働　局　長`;
       }
     );
