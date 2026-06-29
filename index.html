@@ -2320,6 +2320,16 @@ async function processTemplate(formKey, cellMap) {
     }
   }
   
+  // シート保護を全シートから解除（色付け・編集を可能にする）
+  const sheetFiles = Object.keys(zip.files).filter(p => p.startsWith('xl/worksheets/sheet') && p.endsWith('.xml'));
+  for (const path of sheetFiles) {
+    let sheetXml = await zip.file(path).async('string');
+    const newSheetXml = sheetXml.replace(/<sheetProtection[^/]*\/>/g, '');
+    if (sheetXml !== newSheetXml) {
+      zip.file(path, newSheetXml);
+    }
+  }
+
   return await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
 }
 
