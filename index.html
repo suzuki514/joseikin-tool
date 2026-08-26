@@ -172,6 +172,7 @@
     <h2>1. 事業主情報（ヒアリングシートから自動）</h2>
     <div class="grid">
       <div class="label">事業主名称</div><div class="input auto"><input type="text" id="事業主名称"></div><div class="hint">📥 自動取得</div>
+      <div class="label">代表者役職</div><div class="input auto"><input type="text" id="代表者役職"></div><div class="hint">📥 自動取得（新書式）</div>
       <div class="label">代表者氏名</div><div class="input auto"><input type="text" id="代表者氏名"></div><div class="hint">📥 自動取得</div>
       <div class="label">法人番号</div><div class="input auto"><input type="text" id="法人番号"></div><div class="hint">📥 自動取得</div>
       <div class="label">本社郵便番号</div><div class="input auto"><input type="text" id="本社郵便番号"></div><div class="hint">📥 自動取得</div>
@@ -533,52 +534,55 @@ const OVERRIDES = {};
 // Hearing sheet cell mapping (per course)
 const HEARING_MAPS = {
   '人材育成支援_計画届': {
+    // 2026-08 改訂ヒアリングシート（計画届）対応：値は原則C列
     '事業主名称': ['ヒアリングシート', 'C6'],
-    '代表者氏名': ['ヒアリングシート', 'C7'],
-    '法人番号':   ['ヒアリングシート', 'C8'],
-    '本社郵便番号': ['ヒアリングシート', 'C9'],
-    '本社所在地': ['ヒアリングシート', 'C10'],
-    '代表電話':   ['ヒアリングシート', 'C11'],
-    '事業所名称': ['ヒアリングシート', 'C19'],
-    '事業所番号': ['ヒアリングシート', 'C20'],
-    '事業所郵便番号': ['ヒアリングシート', 'C21'],
-    '事業所住所': ['ヒアリングシート', 'C22'],
-    '担当者氏名': ['ヒアリングシート', 'C23'],
-    '担当者役職': ['ヒアリングシート', 'C24'],
-    '担当者電話': ['ヒアリングシート', 'C25'],
-    '担当者メール': ['ヒアリングシート', 'C26'],
-    '受講者数合計': ['ヒアリングシート', 'C29'],
-    '男性数':     ['ヒアリングシート', 'C30'],
-    '女性数':     ['ヒアリングシート', 'E30'],
-    'きっかけ':   ['ヒアリングシート', 'C33'],
-    '密接関係':   ['ヒアリングシート', 'C35'],
-    '金銭提供':   ['ヒアリングシート', 'C36'],
-    '実施場所':   ['ヒアリングシート', 'C39'],
+    '代表者役職': ['ヒアリングシート', 'C7'],
+    '代表者氏名': ['ヒアリングシート', 'C8'],
+    '法人番号':   ['ヒアリングシート', 'C9'],
+    '本社郵便番号': ['ヒアリングシート', 'C10'],
+    '本社所在地': ['ヒアリングシート', 'C11'],
+    '代表電話':   ['ヒアリングシート', 'C12'],
+    '事業所名称': ['ヒアリングシート', 'C20'],
+    '事業所番号': ['ヒアリングシート', 'C21'],
+    '事業所郵便番号': ['ヒアリングシート', 'C22'],
+    '事業所住所': ['ヒアリングシート', 'C23'],
+    '担当者氏名': ['ヒアリングシート', 'C24'],
+    '担当者役職': ['ヒアリングシート', 'C25'],
+    '担当者電話': ['ヒアリングシート', 'C26'],
+    '担当者メール': ['ヒアリングシート', 'C27'],
+    '受講者数合計': ['ヒアリングシート', 'C30'],
+    '男性数':     ['ヒアリングシート', 'C32'],
+    '女性数':     ['ヒアリングシート', 'E32'],
+    'きっかけ':   ['ヒアリングシート', 'C40'],
+    '密接関係':   ['ヒアリングシート', 'C42'],
+    '金銭提供':   ['ヒアリングシート', 'C43'],
+    '実施場所':   ['ヒアリングシート', 'B48'],
   },
   'リスキリング_計画届': {
-    // リスキリングは人材育成と違うセル位置（事業展開関連項目が間にある）
+    // 2026-08 改訂ヒアリングシート（計画届）対応：値は原則C列
     '事業主名称': ['ヒアリングシート', 'C6'],
-    '代表者氏名': ['ヒアリングシート', 'C7'],
-    '法人番号':   ['ヒアリングシート', 'C8'],
-    '本社郵便番号': ['ヒアリングシート', 'C9'],
-    '本社所在地': ['ヒアリングシート', 'C10'],
-    '代表電話':   ['ヒアリングシート', 'C11'],
-    '事業所名称': ['ヒアリングシート', 'C19'],
-    '事業所番号': ['ヒアリングシート', 'C20'],
-    '事業所郵便番号': ['ヒアリングシート', 'C21'],
-    '事業所住所': ['ヒアリングシート', 'C22'],
-    '担当者氏名': ['ヒアリングシート', 'C23'],
-    '担当者役職': ['ヒアリングシート', 'C24'],
-    '担当者電話': ['ヒアリングシート', 'C25'],
-    '担当者メール': ['ヒアリングシート', 'C26'],
-    // リスキリング固有のセル位置（人材育成と違う）
-    '受講者数合計': ['ヒアリングシート', 'C53'],
-    '男性数':     ['ヒアリングシート', 'C54'],
-    '女性数':     ['ヒアリングシート', 'E54'],
-    'きっかけ':   ['ヒアリングシート', 'C55'],
-    '密接関係':   ['ヒアリングシート', 'C57'],
-    '金銭提供':   ['ヒアリングシート', 'C58'],
-    '実施場所':   ['ヒアリングシート', 'C61'],
+    '代表者役職': ['ヒアリングシート', 'C7'],
+    '代表者氏名': ['ヒアリングシート', 'C8'],
+    '法人番号':   ['ヒアリングシート', 'C9'],
+    '本社郵便番号': ['ヒアリングシート', 'C10'],
+    '本社所在地': ['ヒアリングシート', 'C11'],
+    '代表電話':   ['ヒアリングシート', 'C12'],
+    '事業所名称': ['ヒアリングシート', 'C20'],
+    '事業所番号': ['ヒアリングシート', 'C21'],
+    '事業所郵便番号': ['ヒアリングシート', 'C22'],
+    '事業所住所': ['ヒアリングシート', 'C23'],
+    '担当者氏名': ['ヒアリングシート', 'C24'],
+    '担当者役職': ['ヒアリングシート', 'C25'],
+    '担当者電話': ['ヒアリングシート', 'C26'],
+    '担当者メール': ['ヒアリングシート', 'C27'],
+    // リスキリング固有：セクション3(事業展開等)が間に入るため受講者数以降がずれる
+    '受講者数合計': ['ヒアリングシート', 'C54'],
+    '男性数':     ['ヒアリングシート', 'C56'],
+    '女性数':     ['ヒアリングシート', 'E56'],
+    'きっかけ':   ['ヒアリングシート', 'C57'],
+    '密接関係':   ['ヒアリングシート', 'C59'],
+    '金銭提供':   ['ヒアリングシート', 'C60'],
+    '実施場所':   ['ヒアリングシート', 'B65'],
   },
   '人材育成支援_支給申請': {
     '事業主名称': ['ヒアリングシート', 'C7'],
@@ -775,6 +779,28 @@ async function parseHearingSheet(file) {
     sheetData[name] = cells;
   }
   return sheetData;
+}
+
+function applyLocations(sheetData) {
+  // 訓練の実施場所（新書式は最大10行の表）: 記載がある行を全て集約して実施場所欄へ転記
+  const key = courseStageKey();
+  if (!key.includes('計画届')) return;
+  const cells = sheetData['ヒアリングシート'];
+  if (!cells) return;
+  let startRow, endRow;
+  if (key.startsWith('人材育成')) { startRow = 48; endRow = 57; }
+  else if (key.startsWith('リスキリング')) { startRow = 65; endRow = 74; }
+  else return;
+  const locs = [];
+  for (let r = startRow; r <= endRow; r++) {
+    const name = (cells['B' + r] != null ? String(cells['B' + r]) : '').trim();
+    const addr = (cells['C' + r] != null ? String(cells['C' + r]) : '').trim();
+    if (!name && !addr) continue;
+    if (name && addr) locs.push(name + '（' + addr + '）');
+    else locs.push(name || addr);
+  }
+  const el = document.getElementById('実施場所');
+  if (el && locs.length) el.value = locs.join('\n');
 }
 
 function applyToForm(sheetData) {
@@ -1033,14 +1059,16 @@ function buildMap_4_2(d) {
 // 代表者役職と氏名のみ転記（K76: 役職名, K77: 氏名）
 function buildMap_1_3(d) {
   const m = {};
-  if (d.代表者氏名) {
-    // "代表取締役　宮﨑達也" のような形式を全角/半角スペースで分割
+  // 新書式: 代表者役職と代表者氏名は別欄。旧書式(「役職 氏名」1欄)は後方互換で分割。
+  if (d.代表者役職) {
+    m['K76'] = d.代表者役職;
+    if (d.代表者氏名) m['K77'] = d.代表者氏名;
+  } else if (d.代表者氏名) {
     const parts = String(d.代表者氏名).split(/[　 ]+/).filter(s => s.length > 0);
     if (parts.length >= 2) {
-      m['K76'] = parts[0]; // 役職
-      m['K77'] = parts.slice(1).join('　'); // 氏名
+      m['K76'] = parts[0];
+      m['K77'] = parts.slice(1).join('　');
     } else {
-      // スペースがなければ全体を氏名扱い
       m['K77'] = d.代表者氏名;
     }
   }
@@ -1448,7 +1476,7 @@ async function handleFile(file) {
       if (sheet1Data) {
         // Dynamic sample cells based on course
         const isRiskil = key.startsWith('リスキリング');
-        const sample = isRiskil ? ['C6', 'C7', 'C53', 'C54', 'E54', 'C55', 'C61'] : ['C6', 'C7', 'C29', 'C30', 'E30', 'C33', 'C39'];
+        const sample = isRiskil ? ['C6', 'C8', 'C54', 'C56', 'E56', 'C57', 'B65'] : ['C6', 'C8', 'C30', 'C32', 'E32', 'C40', 'B48'];
         debugInfo.push('🔍 ヒアリングシートタブの主要セル値:');
         for (const c of sample) {
           debugInfo.push('   ' + c + ': ' + (sheet1Data[c] !== undefined ? JSON.stringify(sheet1Data[c]).slice(0, 40) : '(空)'));
@@ -1458,6 +1486,7 @@ async function handleFile(file) {
     
     _sheetData = sheetData;  // Save for later use in buildMap functions
     const count = applyToForm(sheetData);
+    applyLocations(sheetData);
     fn.innerHTML = '✅ ' + file.name + ' （' + count + ' 項目反映）<br><details style="margin-top:8px;color:#666;font-weight:normal;font-size:11px;text-align:left;"><summary style="cursor:pointer;">🔍 デバッグ情報（クリックで開く）</summary><pre style="background:#f0f0f0;padding:8px;border-radius:4px;white-space:pre-wrap;">' + debugInfo.join('\n') + '</pre></details>';
     fn.style.color = '#2e7d32';
   } catch (err) {
@@ -1491,7 +1520,7 @@ function readForm() {
     return isNaN(n) ? null : n;
   };
   const getCheck = id => document.getElementById(id)?.checked || false;
-  const allFields = ['事業主名称','代表者氏名','法人番号','本社郵便番号','本社所在地','代表電話','事業所名称','事業所番号','提出先労働局名','所轄公共職業安定所名','事業所郵便番号','事業所住所','担当者氏名','担当者役職','担当者電話','担当者メール','申請者区分','代理人所在地','代理人名称','代理人氏名','代理人電話','代理人郵便番号','代理人登録番号','申請日','助成区分','訓練名','訓練初日','訓練最終日','実施場所','きっかけ','密接関係','金銭提供','機関名称','機関代表者','機関所在地','機関法人番号','DX区分','支給申請日','受付番号','支給訓練名','支給訓練開始日','支給訓練終了日','OFF-JT単価','OJT単価','事業所数','他助成金','金融機関名','店舗名','口座種類','金融機関コード','店舗コード','口座番号','口座名義漢字','口座名義カナ','受取人郵便番号','受取人住所'];
+  const allFields = ['事業主名称','代表者役職','代表者氏名','法人番号','本社郵便番号','本社所在地','代表電話','事業所名称','事業所番号','提出先労働局名','所轄公共職業安定所名','事業所郵便番号','事業所住所','担当者氏名','担当者役職','担当者電話','担当者メール','申請者区分','代理人所在地','代理人名称','代理人氏名','代理人電話','代理人郵便番号','代理人登録番号','申請日','助成区分','訓練名','訓練初日','訓練最終日','実施場所','きっかけ','密接関係','金銭提供','機関名称','機関代表者','機関所在地','機関法人番号','DX区分','支給申請日','受付番号','支給訓練名','支給訓練開始日','支給訓練終了日','OFF-JT単価','OJT単価','事業所数','他助成金','金融機関名','店舗名','口座種類','金融機関コード','店舗コード','口座番号','口座名義漢字','口座名義カナ','受取人郵便番号','受取人住所'];
   const data = {};
   for (const f of allFields) data[f] = get(f);
   data.受講者数合計 = getNum('受講者数合計');
@@ -2395,7 +2424,8 @@ async function processTemplate(formKey, cellMap) {
   // ヒアリングシート C30 の値: ① 事業展開を行う場合 / ② DX化又はGX化を進める場合 / ③ 人事・人材育成計画に基づく場合
   // → ctrlProp2 (①事業展開) / ctrlProp1 (②DX/GX) / ctrlProp3 (③人事・人材育成)
   if (formKey === '1_3') {
-    const bunrui = (_sheetData && _sheetData['ヒアリングシート'] && _sheetData['ヒアリングシート']['C30']) || '';
+    const _hs13 = (_sheetData && _sheetData['ヒアリングシート']) || {};
+    const bunrui = _hs13['C31'] || _hs13['C30'] || '';
     let ctrlNum = null;
     if (bunrui.includes('①') || bunrui.includes('事業展開を行う')) ctrlNum = 2;
     else if (bunrui.includes('②') || bunrui.includes('DX') || bunrui.includes('GX')) ctrlNum = 1;
